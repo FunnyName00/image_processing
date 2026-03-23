@@ -4,35 +4,67 @@ import random
 
 #path = input("Enter the path to the image :\n ")
 
-img = Image.open("image.png")
+img = Image.open("Sil80.jpg")
 
-def pixelSortBrightness(brightness:int, pixels:int, img:Image, rgb:int):
+def pixelSortBrightness(brightness, pixels, img):
     img = img.convert('RGB')
-    if 0 <= rgb <= 2:
-        x = 0
+    width, height = img.size
 
-        while x < img.width:
-            y = 0
-            while y < img.height - pixels:
-                pixel = img.getpixel((x, y))
-                #print("(", x, ",",y,")",img.width, img.height, pixel)  
+    for x in range(width):
+        y = 0
+        while y < height - pixels:
+            pixel = img.getpixel((x, y))
+            pixel_brightness = sum(pixel) // 3
+            # Check if the specific channel meets the threshold
+            if pixel_brightness >= brightness:
+                # 1. Collect the segment
+                segment = []
+                for i in range(pixels):
+                    segment.append(img.getpixel((x, y + i)))
 
-                if pixel[rgb] >= brightness:
-                    list = []
-                    for i in range(pixels):
-                        list.append(img.getpixel((x, y+i)))
+                # 2. Sort the segment (using the rgb channel as the key)
+                segment.sort(key=lambda p: p, reverse=True)
 
-                    list.sort()
-                    list.reverse()
-                    for i in range(len(list)):
-                        if y + i-1 < img.height:
-                            img.putpixel( (x, y + i-1), list[i] )
-                    y += pixels - 1
-                else:
-                    y += 1 
-            x += 1
+                # 3. Put the pixels back
+                for i in range(pixels):
+                    img.putpixel((x, y + i), segment[i])
+                
+                # Jump ahead to the end of the sorted segment
+                y += pixels
+            else:
+                y += 1 
+    return img
 
-        return img
+
+def chomaticAbberation(brightness, pixels, img, rgb_index):
+    channels = list(img.convert('RGB').split())
+    
+    target_channel = channels[rgb_index]
+    width, height = target_channel.size
+    
+    target_data = target_channel.load()
+
+    for x in range(width):
+        y = 0
+        while y < height - pixels:
+            val = target_data[x, y]
+
+            if val >= brightness:
+                segment = []
+                for i in range(pixels):
+                    segment.append(target_data[x, y + i])
+
+                segment.sort(reverse=True)
+
+                for i in range(pixels):
+                    target_data[x, y + i] = segment[i]
+                
+                y += pixels
+            else:
+                y += 1 
+
+    channels[rgb_index] = target_channel
+    return Image.merge("RGB", channels)
 
 
 def binarize(img, threshold):
@@ -80,11 +112,11 @@ def randomPixel(img, probability):
 
 #img = binarize(img, 100)
 
-img = pixelSortBrightness(250, 10, img, 1)
-img = randomPixel(img, 99)
-img = exagerateColor(img, 50, 2, 10)
+img = pixelSortBrightness(100, 100, img)
+#img = randomPixel(img, 99)
+#img = exagerateColor(img, 50, 2, 10)
 
-img = pixelSortBrightness(100, 50, img, 1)
+#img = pixelSortBrightness(100, 50, img, 1)
 
 img.save("result.jpg")
 
