@@ -68,53 +68,54 @@ def chomaticAbberation(brightness, pixels, img, rgb_index):
 
 
 def binarize(img, threshold):
-    output_image=img.convert("L")
-    for x in range(output_image.width):
-        for y in range(output_image.height):
-            if output_image.getpixel((x,y))< threshold:
-                output_image.putpixel( (x,y), 0 )
+    img=img.convert("L")
+    for x in range(img.width):
+        for y in range(img.height):
+            if img.getpixel((x,y))< threshold:
+                img.putpixel( (x,y), 0 )
             else:
-                output_image.putpixel( (x,y), 255 )
-    return output_image
+                img.putpixel( (x,y), 255 )
+    return img
+
 
 def exagerateColor(img, threshold, rgb, factor):
-    output_image=img.convert("RGB")
-    for x in range(output_image.width):
-            for y in range(output_image.height):
-                pixel = output_image.getpixel((x,y))
+    img=img.convert("RGB")
+    for x in range(img.width):
+            for y in range(img.height):
+                pixel = img.getpixel((x,y))
                 
                 if pixel[rgb]< threshold:
                     li = list(pixel) 
                     li[rgb] //= factor
                     pixel = tuple(li)
-                    output_image.putpixel( (x,y), pixel )
+                    img.putpixel( (x,y), pixel )
                 if pixel[rgb]> threshold:
                     li = list(pixel) 
                     li[rgb] *= factor
                     pixel = tuple(li)
-                    output_image.putpixel( (x,y), pixel)
-    return output_image
+                    img.putpixel( (x,y), pixel)
+    return img
 
 
-def randomPixel(img, probability):
-    output_image=img.convert("RGB")
-    for x in range(output_image.width):
-            for y in range(output_image.height):
+def noiseGenerator(img, probability):
+    img=img.convert("RGB")
+    for x in range(img.width):
+            for y in range(img.height):
                 
                 threshold = random.randint(0, 100)
                 r = random.randint(0, 255)
                 g = random.randint(0, 255)
                 b = random.randint(0, 255)
-                if threshold >= probability:
-                    output_image.putpixel( (x,y), (r,g,b))
-    return output_image
+                if threshold <= probability:
+                    img.putpixel( (x,y), (r,g,b))
+    return img
 
 
+img = chomaticAbberation(150, 50, img, 1)
+img = exagerateColor(img, 100, 2, 5)
+img = pixelSortBrightness(200, 100, img)
 #img = binarize(img, 100)
-
-img = pixelSortBrightness(100, 100, img)
-#img = randomPixel(img, 99)
-#img = exagerateColor(img, 50, 2, 10)
+#img = noiseGenerator(img, 20)
 
 #img = pixelSortBrightness(100, 50, img, 1)
 
