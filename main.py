@@ -1,19 +1,19 @@
-from PIL import Image
+from PIL import Image, ImageFilter, ImageDraw, ImageFont
 import random
 
 
 #path = input("Enter the path to the image :\n ")
 
-img = Image.open("Sil80.jpg")
+img = Image.open("image.png")
 
 def pixelSortBrightness(brightness, pixels, img):
     img = img.convert('RGB')
     width, height = img.size
-
+    img_data = img.load()
     for x in range(width):
         y = 0
         while y < height - pixels:
-            pixel = img.getpixel((x, y))
+            pixel = img_data[x, y]
             pixel_brightness = sum(pixel) // 3
             # Check if the specific channel meets the threshold
             if pixel_brightness >= brightness:
@@ -68,10 +68,11 @@ def chromaticAbberation(brightness, pixels, img, rgb_index):
 
 
 def binarize(img, threshold):
-    img=img.convert("L")
+    img = img.convert("L")
+    img_data = img.load()
     for x in range(img.width):
         for y in range(img.height):
-            if img.getpixel((x,y))< threshold:
+            if img_data[x,y] < threshold:
                 img.putpixel( (x,y), 0 )
             else:
                 img.putpixel( (x,y), 255 )
@@ -80,16 +81,17 @@ def binarize(img, threshold):
 
 def exagerateColor(img, threshold, rgb, factor):
     img=img.convert("RGB")
+    img_data = img.load()
     for x in range(img.width):
             for y in range(img.height):
-                pixel = img.getpixel((x,y))
+                pixel = img_data[x, y]
                 
                 if pixel[rgb]< threshold:
                     li = list(pixel) 
                     li[rgb] //= factor
                     pixel = tuple(li)
                     img.putpixel( (x,y), pixel )
-                if pixel[rgb]> threshold:
+                if pixel[rgb] > threshold:
                     li = list(pixel) 
                     li[rgb] *= factor
                     pixel = tuple(li)
@@ -111,13 +113,41 @@ def noiseGenerator(img, probability):
     return img
 
 
-img = chromaticAbberation(150, 50, img, 1)
+def edgeDetect(img):
+    img = img.convert("L")
+    final = img.filter(ImageFilter.Kernel((3, 3), (-1, -1, -1, -1, 8,
+                                               -1, -1, -1, -1), 1, 0))
+    return final
+
+
+
+def textAlongEdge(img: Image, words: list, threshold: int, spacing: int = 15):
+    edge = edgeDetect(img)
+    edge_data = edge.load()
+    width, height = edge.size
+    draw = ImageDraw.Draw(img)
+
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 20)
+    except OSError:
+        print("Font not found at that path. Try 'fc-list' in terminal to find your paths.")
+
+    for x in range(0, width, spacing):
+        for y in range(0, height, spacing):
+            if edge_data[x, y] >= threshold:
+                word = random.choice(words)
+                draw.text((x, y), word, font=font, fill=(255, 0, 0))
+    
+    return img
+
+#img = binarize(img, 100)
+#img = noiseGenerator(img, 10)
+img = chromaticAbberation(150, 50, img, 0)
 img = exagerateColor(img, 100, 2, 5)
 img = pixelSortBrightness(200, 100, img)
-#img = binarize(img, 100)
-#img = noiseGenerator(img, 20)
+img = textAlongEdge(img, ["Death","Life", "Hate","Joy"], 200)
 
-#img = pixelSortBrightness(100, 50, img, 1)
+img = pixelSortBrightness(150, 10, img)
 
 img.save("result.jpg")
 
