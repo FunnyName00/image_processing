@@ -242,7 +242,3 @@ class ImageModifier:
 
         return img
 
-
-
-
-
