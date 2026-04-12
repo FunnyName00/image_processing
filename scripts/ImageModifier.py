@@ -241,4 +241,4 @@ class ImageModifier:
                         write_data[x, y - i] = new_color # Top
 
         return img
-
+    
