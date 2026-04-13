@@ -220,17 +220,17 @@ class ImageModifier:
             Image : result
         """
         img = img.convert('RGB')
-        read_img = img.copy()
-        read_data = read_img.load()
+        edge = ImageModifier.edgeDetect(img)
+        read_data = edge.load()
         write_data = img.load()
         width, height = img.size
 
         for x in range(size, width - size):
             for y in range(size, height - size):
-                r, g, b = read_data[x, y]
+                brightness = read_data[x, y]
                 
-                if (r + g + b) // 3 >= threshold:
-                    new_color = tuple(min(255, int(c * saturation)) for c in (r, g, b))
+                if brightness >= threshold:
+                    new_color = tuple(min(255, int(c * saturation)) for c in write_data[x, y])
                     
                     write_data[x, y] = new_color
                     
