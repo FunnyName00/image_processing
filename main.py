@@ -88,29 +88,29 @@ class GlitchApp:
 
         # Fx setup
         if effect == "Noise":
-            val = simpledialog.askinteger("Noise", "Probability (0-100):", initialvalue=5)
+            val = simpledialog.askinteger("Noise", "Probability (0-100):", initialvalue=5, minvalue=0, maxvalue=100)
             if val is not None:
                 self.processor.add(ImageModifier.noiseGenerator, val)
                 self.listbox.insert(tk.END, f"Noise ({val}%)")
 
         elif effect == "Binarize":  
-            val = simpledialog.askinteger("Binarize", "Threshold (0-255):", initialvalue=128)
+            val = simpledialog.askinteger("Binarize", "Threshold (0-255):", initialvalue=128, minvalue=0, maxvalue=255)
             if val is not None:
                 self.processor.add(ImageModifier.binarize, val)
                 self.listbox.insert(tk.END, f"Binarize ({val})")
 
         elif effect == "Pixel Sort":
-            threshold = simpledialog.askinteger("Pixel Sort", "Threshold (0-255):", initialvalue=128)
-            trail = simpledialog.askinteger("Pixel Sort", "Trail Length (0-200):", initialvalue=20)
+            threshold = simpledialog.askinteger("Pixel Sort", "Threshold (0-255):", initialvalue=128, minvalue=0, maxvalue=255)
+            trail = simpledialog.askinteger("Pixel Sort", "Trail Length (0-200):", initialvalue=20, minvalue=0, maxvalue=200)
 
             if threshold != None and trail != None:
                 self.processor.add(ImageModifier.pixelSortBrightness, threshold, trail)
                 self.listbox.insert(tk.END, f"Pixel Sort ({threshold}, {trail})")
 
         elif effect == "Chromatic":
-            threshold = simpledialog.askinteger("Chromatic Abberation", "Threshold (0-255):", initialvalue=128)
-            trail = simpledialog.askinteger("Chromatic Abberation", "Trail Length (0-200):", initialvalue=20)
-            rgb_index = simpledialog.askinteger("Chromatic Abberation", "RGB Index (0:Red, 1:Green, 2:Blue):", initialvalue=0)
+            threshold = simpledialog.askinteger("Chromatic Abberation", "Threshold (0-255):", initialvalue=128, minvalue=0, maxvalue=255)
+            trail = simpledialog.askinteger("Chromatic Abberation", "Trail Length (0-200):", initialvalue=20, minvalue=0, maxvalue=200)
+            rgb_index = simpledialog.askinteger("Chromatic Abberation", "RGB Index (0:Red, 1:Green, 2:Blue):", initialvalue=0, minvalue=0, maxvalue=2)
             if threshold != None and trail != None and rgb_index != None:
                 self.processor.add(ImageModifier.chromaticAbberation, threshold, trail, rgb_index)
                 self.listbox.insert(tk.END, f"Chromatic Abberation ({threshold}, {trail}, {rgb_index})")
@@ -125,7 +125,7 @@ class GlitchApp:
 
             if input:
                 words_list = [w.strip() for w in input.split(",")]
-                threshold = simpledialog.askinteger("Input", "Edge threshold (0-255):", initialvalue=128)
+                threshold = simpledialog.askinteger("Input", "Edge threshold (0-255):", initialvalue=128, minvalue=0, maxvalue=255)
                 space = simpledialog.askinteger("Input", "Spacing:", initialvalue=20)
 
                 if threshold is not None and space is not None:
@@ -133,9 +133,9 @@ class GlitchApp:
                     self.listbox.insert(tk.END, f"TextEdge ({len(words_list)} words)")
 
         elif effect == "Crosses along edges":
-            threshold = simpledialog.askinteger("Cross", "Threshold (0-255):", initialvalue=128)
-            saturation = simpledialog.askfloat("Cross", "Saturation (1-2):", initialvalue=1.2)
-            size = simpledialog.askinteger("Cross", "Size (0-255):", initialvalue=5)
+            threshold = simpledialog.askinteger("Cross", "Threshold (0-255):", initialvalue=128, minvalue=0, maxvalue=255)
+            saturation = simpledialog.askfloat("Cross", "Saturation (1-2):", initialvalue=1.2, minvalue=1, maxvalue=2)
+            size = simpledialog.askinteger("Cross", "Size (0-255):", initialvalue=5, minvalue=0, maxvalue=255)
             if threshold is not None and saturation is not None and size is not None:
                 self.processor.add(ImageModifier.crossBrightness, threshold, saturation, size)
                 self.listbox.insert(tk.END, f"Crosses ({threshold}, {saturation}, {size})")
@@ -148,7 +148,7 @@ class GlitchApp:
 
                 self.processor.add(ImageModifier.exagerateColor, threshold, rgb_index, factor)
                 self.listbox.insert(tk.END, f"Color exagerate ({threshold}, {rgb_index}, {factor})")
-                
+
     def remove_effect(self):
         selection = self.listbox.curselection()
         if selection:
