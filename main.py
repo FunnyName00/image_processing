@@ -41,7 +41,7 @@ class GlitchApp:
         tk.Label(self.sidebar, text="Add Effect:", bg="#2e2e2e", fg="#aaaaaa").pack(pady=(15, 0))
         self.effect_var = tk.StringVar()
         self.effect_menu = ttk.Combobox(self.sidebar, textvariable=self.effect_var, state="readonly")
-        self.effect_menu['values'] = ("Noise", "Binarize", "Pixel Sort", "Chromatic", "Edge Detect", "Text along edges")
+        self.effect_menu['values'] = ("Noise", "Binarize", "Pixel Sort", "Chromatic", "Edge Detect", "Text along edges", "Crosses along edges")
         self.effect_menu.pack(fill="x", padx=10, pady=5)
         
         tk.Button(self.sidebar, text="Add to List", command=self.add_effect_ui).pack(fill="x", padx=10, pady=5)
@@ -123,6 +123,14 @@ class GlitchApp:
                 if threshold is not None and space is not None:
                     self.processor.add(ImageModifier.textAlongEdge, words_list, threshold, space)
                     self.listbox.insert(tk.END, f"TextEdge ({len(words_list)} words)")
+
+        elif effect == "Crosses along edges":
+            threshold = simpledialog.askinteger("Cross", "Threshold (0-255):", initialvalue=128)
+            saturation = simpledialog.askfloat("Cross", "Saturation (0-1):", initialvalue=0.2)
+            size = simpledialog.askinteger("Cross", "Size (0-255):", initialvalue=1)
+            if threshold is not None and saturation is not None and size is not None:
+                self.processor.add(ImageModifier.crossBrightness, threshold, saturation, size)
+                self.listbox.insert(tk.END, f"Crosses ({threshold}, {saturation}, {size})")
 
     def remove_effect(self):
         selection = self.listbox.curselection()
