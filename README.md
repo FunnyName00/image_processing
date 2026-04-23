@@ -78,11 +78,15 @@ Many algorithms in this program utilize a "Threshold + Segment" logic
 
 ## What's next ? 
 
+  - Display temporary image that's deleted when closing the app
+  - Add save button to save the image where the user want to
   - Fx chain presets
+    
   - Restyle the app, maybe an original artistic direction
   - MORE FUNCTIONNALITIESSSSS
   - MORE GLITCHEEEESSSSSSSS
   - M̶͔͔̯̆̉̐̑͐͆̌O̶̡͇̫̲͇̖̯͐͌͋͐̍͗͗͗̌R̴͍̀͌͂͂̋̍̅͗̄̕Ȩ̷̡̛̼̩̜̪͕͙͖͈̺̅͂̓́͛̊͊̑̄͋̚ͅͅ ̵̱͙̙̑͌̎̇͠Ģ̵̡͚͍̞͓̭̘͈̩̬̩̪̄ͅL̵̡̢̨̧̻̥̜͎͙͔̦̘̦̔̀̎̌͒͆́̈̈͠͝ͅḬ̷̙̱̮͙̦̜͕̇̍̑͂̀͊͆̅̐̈́̕T̶̙̟̘̟̝͈̖̭̪̺̻͓͈̟̤̆͆̾̈́̈́̇̿̈̂́̆̍͆͘͠Ĉ̸̨̧̲̭͚͎͍̺̘͓̣͓͓̰̾͐̌̌͑̍̓̍̌̿̌̈́ͅH̶̡̤͉̄̑̉̍͊̽̅̍̆͐Ẹ̵̖͔̣͒͗̊̇̓̌̅̀̅̌̌͗̑̾͝S̵̢̧̨̩͈̦̭̰͖͝
+    
 ## License
 
 Distributed under the MIT License. See LICENSE for more information.
